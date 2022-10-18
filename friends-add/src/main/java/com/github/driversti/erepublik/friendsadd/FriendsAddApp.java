@@ -16,6 +16,7 @@ public class FriendsAddApp {
 
   public static void main(String[] args) {
     Map<ArgumentKey, String> argumentsMap = new ArgumentParser().parse(args);
+
     RequestConfig requestConfig = new RequestConfig(argumentsMap.get(ERPK),
         argumentsMap.get(TOKEN));
     Set<Integer> citizensIds = IntStream.rangeClosed(250, 300)
