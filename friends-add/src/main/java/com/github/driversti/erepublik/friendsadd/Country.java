@@ -3,14 +3,11 @@ package com.github.driversti.erepublik.friendsadd;
 import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 // TODO: copied from another my project. Remove redundant
 public enum Country {
-  WORLD(0, "World", "cc", "\uD83C\uDF0D"),
+  //WORLD(0, "World", "cc", "\uD83C\uDF0D"),
   ALBANIA(167, "Albania", "ALL", "\uD83C\uDDE6\uD83C\uDDF1"),
   ARGENTINA(27, "Argentina", "ARS", "\uD83C\uDDE6\uD83C\uDDF7"),
   ARMENIA(169, "Armenia", "AMD", "\uD83C\uDDE6\uD83C\uDDF2"),
@@ -85,8 +82,8 @@ public enum Country {
   UNITED_KINGDOM(29, "United Kingdom", "GBP", "\uD83C\uDDEC\uD83C\uDDE7"),
   URUGUAY(74, "Uruguay", "UYU", "\uD83C\uDDFA\uD83C\uDDFE"),
   USA(24, "USA", "USD", "\uD83C\uDDFA\uD83C\uDDF8"),
-  VENEZUELA(28, "Venezuela", "VEF", "\uD83C\uDDFB\uD83C\uDDEA"),
-  UNKNOWN(255, "Unknown", "UNK", "\uD83D\uDE15");
+  VENEZUELA(28, "Venezuela", "VEF", "\uD83C\uDDFB\uD83C\uDDEA");
+  //UNKNOWN(255, "Unknown", "UNK", "\uD83D\uDE15");
 
   private final int id;
   private final String readableName;
@@ -100,21 +97,6 @@ public enum Country {
     this.emoji = emoji;
   }
 
-  int id() {
-    return id;
-  }
-
-  public String getUrlName() {
-    return readableName
-        .replace(' ', '-')
-        .replace('(', Character.MIN_VALUE)
-        .replace(')', Character.MIN_VALUE);
-  }
-
-  public boolean isWorld() {
-    return this.equals(WORLD);
-  }
-
   public static Country getById(Integer id) {
     requireNonNull(id);
     for (Country country : values()) {
@@ -123,45 +105,5 @@ public enum Country {
       }
     }
     throw new IllegalArgumentException(format("Country with the id %s does not exist", id));
-//    return UNKNOWN;
-  }
-
-  public static Country getByCurrency(String currency) {
-    requireNonNull(currency);
-    for (Country country : values()) {
-      if (Objects.equals(country.currency, currency)) {
-        return country;
-      }
-    }
-    throw new IllegalArgumentException(
-        format("Country with the currency %s does not exist", currency));
-  }
-
-  public static Country getByEmoji(String emoji) {
-    requireNonNull(emoji);
-    for (Country country : values()) {
-      if (Objects.equals(country.emoji, emoji)) {
-        return country;
-      }
-    }
-    throw new IllegalArgumentException(format("Country with the emoji %s does not exist", emoji));
-  }
-
-  public static List<Integer> getIDs() {
-    return Stream.of(values())
-        .map(it -> it.id)
-        .collect(Collectors.toList());
-  }
-
-  public static List<Country> countries() {
-    return List.of(ALBANIA, ARGENTINA, ARMENIA, AUSTRALIA, AUSTRIA, BELARUS, BELGIUM, BOLIVIA,
-        BOSNIA_AND_HERZEGOVINA, BRAZIL, BULGARIA, CANADA, CHILE, CHINA, COLOMBIA, CROATIA,
-        CUBA, CYPRUS, CZECH_REPUBLIC, DENMARK, EGYPT, ESTONIA, FINLAND, FRANCE, GEORGIA, GERMANY,
-        GREECE, HUNGARY, INDIA, INDONESIA, IRAN, IRELAND, ISRAEL, ITALY, JAPAN, LATVIA, LITHUANIA,
-        MALAYSIA, MEXICO, MONTENEGRO, NETHERLANDS, NEW_ZEALAND, NIGERIA, NORTH_KOREA, NORWAY,
-        PAKISTAN, PARAGUAY, PERU, PHILIPPINES, POLAND, PORTUGAL, REPUBLIC_OF_CHINA_TAIWAN,
-        REPUBLIC_OF_MACEDONIA_FYROM, REPUBLIC_OF_MOLDOVA, ROMANIA, RUSSIA, SAUDI_ARABIA, SERBIA,
-        SINGAPORE, SLOVAKIA, SLOVENIA, SOUTH_AFRICA, SOUTH_KOREA, SPAIN, SWEDEN, SWITZERLAND,
-        THAILAND, TURKEY, UKRAINE, UNITED_ARAB_EMIRATES, UNITED_KINGDOM, URUGUAY, USA, VENEZUELA);
   }
 }

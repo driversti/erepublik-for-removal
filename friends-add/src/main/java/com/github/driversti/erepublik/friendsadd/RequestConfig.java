@@ -110,6 +110,8 @@ public class RequestConfig {
     private boolean addDead;
 
     public Builder(String erpk, String token) {
+      Objects.requireNonNull(erpk, "erpk cannot be null");
+      Objects.requireNonNull(token, "token cannot be null");
       this.erpk = erpk;
       this.token = token;
     }

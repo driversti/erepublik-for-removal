@@ -7,55 +7,15 @@ import static com.github.driversti.erepublik.friendsadd.ArgumentKey.FROM_ID;
 import static com.github.driversti.erepublik.friendsadd.ArgumentKey.INCLUDE_COUNTRIES;
 import static com.github.driversti.erepublik.friendsadd.ArgumentKey.TOKEN;
 import static com.github.driversti.erepublik.friendsadd.ArgumentKey.TO_ID;
-import static com.github.driversti.erepublik.friendsadd.Country.CROATIA;
-import static com.github.driversti.erepublik.friendsadd.Country.LITHUANIA;
-import static com.github.driversti.erepublik.friendsadd.Country.POLAND;
-import static com.github.driversti.erepublik.friendsadd.Country.RUSSIA;
-import static com.github.driversti.erepublik.friendsadd.Country.SERBIA;
-import static com.github.driversti.erepublik.friendsadd.Country.UKRAINE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 class ArgumentParserUnitTest {
 
   private final ArgumentParser parser = new ArgumentParser();
-
-  @Test
-  void shouldCreateRequestConfig() {
-    // given
-    String erpk = "zxcvbnm";
-    String token = "qwerty";
-    int fromId = 123;
-    int toId = 321;
-    Set<Country> includedCountries = Set.of(UKRAINE, POLAND, LITHUANIA);
-    Set<Country> excludedCountries = Set.of(CROATIA, RUSSIA, SERBIA);
-    boolean addBlocked = true;
-    boolean addDead = true;
-
-    String[] args = new String[]{"erpk=" + erpk, "token=" + token,
-        "from_id=" + fromId, "to_id=" + toId,
-        "include_countries=" + includedCountries.stream().map(Country::id).map(String::valueOf)
-            .collect(Collectors.joining(",")),
-        "exclude_countries=" + excludedCountries.stream().map(Country::id).map(String::valueOf)
-            .collect(Collectors.joining(",")),
-        "add_blocked=" + addBlocked, "add_dead=" + addDead};
-
-    // and
-    RequestConfig expected = new RequestConfig.Builder(erpk, token)
-        .fromId(fromId).toId(toId).includedCountries(includedCountries)
-        .excludedCountries(excludedCountries).addBlocked(addBlocked).addDead(addDead).build();
-
-    // when
-    RequestConfig actual = parser.create(args);
-
-    // then
-    assertEquals(expected, actual);
-  }
 
   @Test
   void shouldSuccessfullyParseGivenEmptyArguments() {

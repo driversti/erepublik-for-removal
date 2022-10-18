@@ -1,8 +1,5 @@
 package com.github.driversti.erepublik.friendsadd;
 
-import static com.github.driversti.erepublik.friendsadd.ArgumentKey.ERPK;
-import static com.github.driversti.erepublik.friendsadd.ArgumentKey.TOKEN;
-
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,9 +14,8 @@ public class FriendsAddApp {
   public static void main(String[] args) {
     Map<ArgumentKey, String> argumentsMap = new ArgumentParser().parse(args);
 
-    RequestConfig requestConfig = new RequestConfig(argumentsMap.get(ERPK),
-        argumentsMap.get(TOKEN));
-    Set<Integer> citizensIds = IntStream.rangeClosed(250, 300)
+    RequestConfig requestConfig = new RequestConfigFactory().create(argumentsMap);
+    Set<Integer> citizensIds = IntStream.rangeClosed(250, 260)
         .boxed().collect(Collectors.toSet());
     ApiClient apiClient = new DefaultApiClient();
     apiClient.addFriend(requestConfig, citizensIds);
