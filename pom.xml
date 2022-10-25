@@ -22,9 +22,11 @@
     <!--  DEPENDENCIES  VERSIONS  -->
     <log4j2.version>2.19.0</log4j2.version>
     <apache-commons-lang3.version>3.12.0</apache-commons-lang3.version>
+    <gson.version>2.9.1</gson.version>
 
     <!--  TEST VERSIONS  -->
     <junit-jupiter.version>5.9.0</junit-jupiter.version>
+    <mockito.version>4.8.0</mockito.version>
 
     <!--  PLUGINS  VERSIONS  -->
     <versions-maven-plugin.version>2.10.0</versions-maven-plugin.version>
@@ -48,12 +50,24 @@
       <artifactId>commons-lang3</artifactId>
       <version>${apache-commons-lang3.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>${gson.version}</version>
+    </dependency>
+
 
     <!--  TEST  -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
       <version>${junit-jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

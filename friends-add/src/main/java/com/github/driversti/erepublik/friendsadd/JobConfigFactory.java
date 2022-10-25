@@ -9,16 +9,16 @@ import static com.github.driversti.erepublik.friendsadd.ArgumentKey.INCLUDE_COUN
 import static com.github.driversti.erepublik.friendsadd.ArgumentKey.TOKEN;
 import static com.github.driversti.erepublik.friendsadd.ArgumentKey.TO_ID;
 
-import com.github.driversti.erepublik.friendsadd.RequestConfig.Builder;
+import com.github.driversti.erepublik.friendsadd.JobConfig.Builder;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.BooleanUtils;
 
-public class RequestConfigFactory {
+public class JobConfigFactory {
 
-  RequestConfig create(Map<ArgumentKey, String> argumentMap) {
+  JobConfig create(Map<ArgumentKey, String> argumentMap) {
     Builder builder = new Builder(argumentMap.get(ERPK), argumentMap.get(TOKEN));
     setFromId(argumentMap.get(FROM_ID), builder);
     setToId(argumentMap.get(TO_ID), builder);

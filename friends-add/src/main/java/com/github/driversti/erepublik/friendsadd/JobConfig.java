@@ -3,20 +3,26 @@ package com.github.driversti.erepublik.friendsadd;
 import java.util.Objects;
 import java.util.Set;
 
-public class RequestConfig {
+public class JobConfig {
 
   private final String erpk;
   private final String token;
-  private final int citizenId;
+  private int fromId;
+
+  private int toId;
   private Set<Country> includedCountries;
   private Set<Country> excludedCountries;
   private boolean addBlocked;
   private boolean addDead;
 
-  private RequestConfig(Builder builder) {
+  private JobConfig(Builder builder) {
     this.erpk = builder.erpk;
     this.token = builder.token;
-    this.citizenId = builder.citizenId;
+    if (builder.fromId > builder.toId) {
+      throw new IllegalArgumentException("'toId' cannot be bigger than 'fromId'");
+    }
+    this.fromId = builder.fromId;
+    this.toId = builder.toId;
     this.includedCountries = builder.includedCountries;
     this.excludedCountries = builder.excludedCountries;
     this.addBlocked = builder.addBlocked;
@@ -31,8 +37,12 @@ public class RequestConfig {
     return token;
   }
 
-  int citizenId() {
-    return citizenId;
+  int fromId() {
+    return fromId;
+  }
+
+  int toId() {
+    return toId;
   }
 
   Set<Country> includedCountries() {
@@ -53,7 +63,7 @@ public class RequestConfig {
 
   @Override
   public int hashCode() {
-    return Objects.hash(erpk, token, citizenId, includedCountries, excludedCountries,
+    return Objects.hash(erpk, token, fromId, toId, includedCountries, excludedCountries,
         addBlocked, addDead);
   }
 
@@ -62,13 +72,14 @@ public class RequestConfig {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof RequestConfig that)) {
+    if (!(o instanceof JobConfig that)) {
       return false;
     }
-    return citizenId == that.citizenId && addBlocked == that.addBlocked && addDead == that.addDead
-        && erpk.equals(that.erpk) && token.equals(that.token)
-        && Objects.equals(includedCountries, that.includedCountries)
-        && Objects.equals(excludedCountries, that.excludedCountries);
+    return fromId == that.fromId && toId == that.toId && addBlocked == that.addBlocked
+        && addDead == that.addDead && erpk.equals(
+        that.erpk) && token.equals(that.token) && Objects.equals(includedCountries,
+        that.includedCountries) && Objects.equals(excludedCountries,
+        that.excludedCountries);
   }
 
   @Override
@@ -76,7 +87,8 @@ public class RequestConfig {
     return "JobConfig{" +
         "erpk='" + erpk + '\'' +
         ", token='" + token + '\'' +
-        ", citizenId=" + citizenId +
+        ", fromId=" + fromId +
+        ", toId=" + toId +
         ", includedCountries=" + includedCountries +
         ", excludedCountries=" + excludedCountries +
         ", addBlocked=" + addBlocked +
@@ -88,22 +100,29 @@ public class RequestConfig {
 
     private final String erpk;
     private final String token;
-    private final int citizenId;
+    private int fromId = 178;
+    // todo load the latest ID from https://erepublik.tools/en/society/citizen-registration/0/2022-10-16/2022-10-17/1
+    private int toId = 9671074; // on day 2022-10-17
     private Set<Country> includedCountries = Set.of();
     private Set<Country> excludedCountries = Set.of();
-    private boolean addBlocked = false;
-    private boolean addDead = false;
+    private boolean addBlocked;
+    private boolean addDead;
 
-    public Builder(String erpk, String token, Integer citizenId) {
-      Objects.requireNonNull(erpk, "erpk cannot be null");
-      Objects.requireNonNull(token, "token cannot be null");
-      Objects.requireNonNull(citizenId, "citizenId cannot be null");
-      if (citizenId < 178) {
-        throw new IllegalArgumentException("citizenId cannot be less than 178");
-      }
+    public Builder(String erpk, String token) {
+      Objects.requireNonNull(erpk, "'erpk' cannot be null");
+      Objects.requireNonNull(token, "'token' cannot be null");
       this.erpk = erpk;
       this.token = token;
-      this.citizenId = citizenId;
+    }
+
+    public Builder fromId(int fromId) {
+      this.fromId = fromId;
+      return this;
+    }
+
+    public Builder toId(int toId) {
+      this.toId = toId;
+      return this;
     }
 
     public Builder includedCountries(Set<Country> includedCountries) {
@@ -126,8 +145,8 @@ public class RequestConfig {
       return this;
     }
 
-    public RequestConfig build() {
-      return new RequestConfig(this);
+    public JobConfig build() {
+      return new JobConfig(this);
     }
   }
 }

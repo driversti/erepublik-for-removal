@@ -21,7 +21,7 @@ import java.util.Set;
 import org.apache.commons.lang3.BooleanUtils;
 import org.junit.jupiter.api.Test;
 
-class RequestConfigFactoryUnitTest {
+class JobConfigFactoryUnitTest {
 
   private final String erpk = "erpk";
   private final String token = "token";
@@ -32,15 +32,15 @@ class RequestConfigFactoryUnitTest {
   private final String addBlocked = "true";
   private final String addDead = "true";
 
-  private final RequestConfigFactory factory = new RequestConfigFactory();
+  private final JobConfigFactory factory = new JobConfigFactory();
 
   @Test
-  void shouldCreateMinimallyValidRequestConfig() {
+  void shouldCreateMinimallyValidJobConfig() {
     // given
     Map<ArgumentKey, String> args = Map.of(ERPK, erpk, TOKEN, token);
 
     // when
-    RequestConfig actual = factory.create(args);
+    JobConfig actual = factory.create(args);
 
     // then
     assertEquals(erpk, actual.erpk());
@@ -48,7 +48,7 @@ class RequestConfigFactoryUnitTest {
   }
 
   @Test
-  void shouldCreateValidRequestConfigWithAllCustomFields() {
+  void shouldCreateValidJobConfigWithAllCustomFields() {
     // given
     Map<ArgumentKey, String> args = Map.of(ERPK, erpk, TOKEN, token, FROM_ID,
         fromId, TO_ID, toId,
@@ -56,7 +56,7 @@ class RequestConfigFactoryUnitTest {
         ADD_BLOCKED, addBlocked, ADD_DEAD, addBlocked);
 
     // when
-    RequestConfig actual = factory.create(args);
+    JobConfig actual = factory.create(args);
 
     // then
     assertEquals(erpk, actual.erpk());
