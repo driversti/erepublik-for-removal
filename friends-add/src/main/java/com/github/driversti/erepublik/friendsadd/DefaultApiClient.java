@@ -36,7 +36,7 @@ public class DefaultApiClient implements ApiClient {
             requestConfig.citizenId())))
         .build();
     try {
-      log.info("Adding citizenId {}", requestConfig.citizenId());
+      log.info("Adding citizen with ID {}", requestConfig.citizenId());
       HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 //      log.info("Response status code: {}", response.statusCode());
       log.info("{}", toErepublikResponse(response.body()).message);
@@ -46,6 +46,11 @@ public class DefaultApiClient implements ApiClient {
     } catch (InterruptedException e) {
       log.error("InterruptedException", e);
     }
+  }
+
+  @Override
+  public String getCitizen(int id) {
+    return null;
   }
 
   private ErepublikResponse toErepublikResponse(String body) {

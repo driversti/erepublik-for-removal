@@ -97,6 +97,10 @@ public enum Country {
     this.emoji = emoji;
   }
 
+  String readableName() {
+    return readableName;
+  }
+
   public static Country getById(Integer id) {
     requireNonNull(id);
     for (Country country : values()) {
