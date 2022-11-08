@@ -3,7 +3,7 @@ package com.github.driversti.erepublik.friendsadd;
 import java.util.Objects;
 import java.util.Set;
 
-public class RequestConfig {
+public class AddFriendRequestConfig {
 
   private final String erpk;
   private final String token;
@@ -13,7 +13,7 @@ public class RequestConfig {
   private boolean addBlocked;
   private boolean addDead;
 
-  private RequestConfig(Builder builder) {
+  private AddFriendRequestConfig(Builder builder) {
     this.erpk = builder.erpk;
     this.token = builder.token;
     this.citizenId = builder.citizenId;
@@ -62,7 +62,7 @@ public class RequestConfig {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof RequestConfig that)) {
+    if (!(o instanceof AddFriendRequestConfig that)) {
       return false;
     }
     return citizenId == that.citizenId && addBlocked == that.addBlocked && addDead == that.addDead
@@ -126,8 +126,8 @@ public class RequestConfig {
       return this;
     }
 
-    public RequestConfig build() {
-      return new RequestConfig(this);
+    public AddFriendRequestConfig build() {
+      return new AddFriendRequestConfig(this);
     }
   }
 }

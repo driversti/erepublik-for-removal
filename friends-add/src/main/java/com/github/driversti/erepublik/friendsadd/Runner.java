@@ -2,7 +2,7 @@ package com.github.driversti.erepublik.friendsadd;
 
 import static java.util.stream.Collectors.joining;
 
-import com.github.driversti.erepublik.friendsadd.RequestConfig.Builder;
+import com.github.driversti.erepublik.friendsadd.AddFriendRequestConfig.Builder;
 import java.util.Collection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,13 +19,24 @@ public class Runner extends Thread {
   void run(JobConfig jc) {
     logJobConfig(jc);
     for (int citizenId = jc.fromId(); citizenId <= jc.toId(); citizenId++) {
+      Player player = apiClient.getCitizen(
+          new GetCitizenRequestConfig(jc.erpk(), jc.token(), citizenId));
       // TODO: skip if banned
+      if (player.isBanned()) {
+        log.info("Player {} with ID {} is banned. Skipping...", player.nickname(), citizenId);
+        continue;
+      }
       // TODO: add citizens of specified countries!
       // TODO: skip citizens of specified countries!
       // TODO: add/skip blocked citizens
       // TODO: add/skip dead citizens
-      RequestConfig requestConfig = new Builder(jc.erpk(), jc.token(), citizenId).build();
-      apiClient.addFriend(requestConfig);
+      if (player.isDead()) {
+        log.info("Player {} with ID {} is dead. Skipping...", player.nickname(), citizenId);
+        continue;
+      }
+      AddFriendRequestConfig addFriendRequestConfig = new Builder(jc.erpk(), jc.token(),
+          citizenId).build();
+      apiClient.addFriend(addFriendRequestConfig);
       waitIfNotLastCitizenId(citizenId, jc.toId());
     }
   }
@@ -40,7 +51,8 @@ public class Runner extends Thread {
     log.info("Got job for adding citizens with IDs between {} and {}, "
             + "from countries {}, except countries {}, "
             + "skipping blocked citizens: {}, skipping dead citizens: {}",
-        jc.fromId(), jc.toId(), allowedCountries, forbiddenCountries, jc.addBlocked(), jc.addDead());
+        jc.fromId(), jc.toId(), allowedCountries, forbiddenCountries, jc.addBlocked(),
+        jc.addDead());
   }
 
   private String convertCountriesToString(Collection<Country> countries) {
@@ -51,7 +63,9 @@ public class Runner extends Thread {
   private void waitIfNotLastCitizenId(int currentCitizenId, int lastCitizenId) {
     if (currentCitizenId < lastCitizenId) {
       try {
-        Thread.sleep(2000L);
+        // allowed 3000 requests per 3600 seconds (1 request each 1200ms).
+        // Since we perform 2 request for one citizen, we have to double the delay to avoid 429
+        Thread.sleep(2500L);
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }
