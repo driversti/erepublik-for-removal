@@ -21,7 +21,7 @@ class RunnerTest {
         .fromId(178).toId(180).build();
 
     // and
-    Player player = new Player().isBanned(false).isDead(false);
+    Player player = new Player().isBanned(false).isDead(false).isBlocked(false);
     when(apiClient.getCitizen(isA(GetCitizenRequestConfig.class))).thenReturn(player);
 
     // when
@@ -55,7 +55,26 @@ class RunnerTest {
         .fromId(178).toId(178).build();
 
     // and
-    Player player = new Player().isBanned(false).isDead(true).citizenNickname("John Doe");
+    Player player = new Player().isBanned(false).isDead(true).isBlocked(false)
+        .citizenNickname("John Doe");
+    when(apiClient.getCitizen(isA(GetCitizenRequestConfig.class))).thenReturn(player);
+
+    // when
+    runner.run(jobConfig);
+
+    // then
+    verify(apiClient, times(0)).addFriend(isA(AddFriendRequestConfig.class));
+  }
+
+  @Test
+  void shouldNotCallAddFriendWhenPlayerIsBlocked() {
+    // given
+    JobConfig jobConfig = new JobConfig.Builder("erpk", "token")
+        .fromId(178).toId(178).build();
+
+    // and
+    Player player = new Player().isBanned(false).isBlocked(true)
+        .isDead(false).citizenNickname("John Doe");
     when(apiClient.getCitizen(isA(GetCitizenRequestConfig.class))).thenReturn(player);
 
     // when

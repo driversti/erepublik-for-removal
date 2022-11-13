@@ -48,6 +48,16 @@ class Player {
     this.location = location;
   }
 
+  boolean isBlocked() {
+    return isBlocked;
+  }
+
+  Player isBlocked(Boolean blocked) {
+    createCitizenIfNeeded();
+    isBlocked = blocked;
+    return this;
+  }
+
   void setIsBlocked(Boolean blocked) {
     isBlocked = blocked;
   }

@@ -21,15 +21,16 @@ public class Runner extends Thread {
     for (int citizenId = jc.fromId(); citizenId <= jc.toId(); citizenId++) {
       Player player = apiClient.getCitizen(
           new GetCitizenRequestConfig(jc.erpk(), jc.token(), citizenId));
-      // TODO: skip if banned
       if (player.isBanned()) {
         log.info("Player {} with ID {} is banned. Skipping...", player.nickname(), citizenId);
         continue;
       }
       // TODO: add citizens of specified countries!
       // TODO: skip citizens of specified countries!
-      // TODO: add/skip blocked citizens
-      // TODO: add/skip dead citizens
+      if (player.isBlocked()) {
+        log.info("Player {} with ID {} is blocked. Skipping...", player.nickname(), citizenId);
+        continue;
+      }
       if (player.isDead()) {
         log.info("Player {} with ID {} is dead. Skipping...", player.nickname(), citizenId);
         continue;
