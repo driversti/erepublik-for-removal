@@ -68,6 +68,24 @@ class Player {
     }
   }
 
+  Country citizenship() {
+    return Country.getById(location.citizenshipCountry.id);
+  }
+
+  Player citizenship(Country citizenship) {
+    createLocationIfNeeded();
+    location.citizenshipCountry.id = citizenship.getId();
+    location.citizenshipCountry.name = citizenship.readableName();
+    return this;
+  }
+
+  private void createLocationIfNeeded() {
+    if (location == null) {
+      location = new Location();
+      location.citizenshipCountry = new Player.Location.CitizenshipCountry();
+    }
+  }
+
   @Override
   public String toString() {
     return "Player{" +
@@ -122,7 +140,7 @@ class Player {
           '}';
     }
 
-    public static class CitizenshipCountry {
+    private static class CitizenshipCountry {
 
       private Integer id;
       private String name;

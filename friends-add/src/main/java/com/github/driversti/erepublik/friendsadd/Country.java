@@ -101,6 +101,10 @@ public enum Country {
     return readableName;
   }
 
+  int getId() {
+    return id;
+  }
+
   public static Country getById(Integer id) {
     requireNonNull(id);
     for (Country country : values()) {

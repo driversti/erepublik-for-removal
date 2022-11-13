@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.joining;
 
 import com.github.driversti.erepublik.friendsadd.AddFriendRequestConfig.Builder;
 import java.util.Collection;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,7 +27,11 @@ public class Runner extends Thread {
         continue;
       }
       // TODO: add citizens of specified countries!
-      // TODO: skip citizens of specified countries!
+      if (isAmongCountries(player.citizenship(), jc.excludedCountries())) {
+        log.info("{} is citizen of excluded country {}",
+            player.nickname(), jc.excludedCountries());
+        continue;
+      }
       if (player.isBlocked()) {
         log.info("Player {} with ID {} is blocked. Skipping...", player.nickname(), citizenId);
         continue;
@@ -59,6 +64,10 @@ public class Runner extends Thread {
   private String convertCountriesToString(Collection<Country> countries) {
     return countries.stream().map(Country::readableName).sorted()
         .collect(joining(",", "[", "]"));
+  }
+
+  private boolean isAmongCountries(Country country, Set<Country> excludedCountries) {
+    return excludedCountries.contains(country);
   }
 
   private void waitIfNotLastCitizenId(int currentCitizenId, int lastCitizenId) {
