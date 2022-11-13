@@ -1,5 +1,8 @@
 package com.github.driversti.erepublik.friendsadd;
 
+import java.util.Collection;
+import java.util.Set;
+
 class Player {
 
   private Citizen citizen;
@@ -94,6 +97,10 @@ class Player {
         ", isBanned=" + isBanned +
         ", isBlocked=" + isBlocked +
         '}';
+  }
+
+  boolean isCitizenOf(Collection<Integer> countryIds) {
+    return countryIds.contains(location.citizenshipCountry.id);
   }
 
   private static class Citizen {

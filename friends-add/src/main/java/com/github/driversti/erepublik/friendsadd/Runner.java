@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.joining;
 import com.github.driversti.erepublik.friendsadd.AddFriendRequestConfig.Builder;
 import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,9 +27,13 @@ public class Runner extends Thread {
         log.info("Player {} with ID {} is banned. Skipping...", player.nickname(), citizenId);
         continue;
       }
-      // TODO: add citizens of specified countries!
-      if (isAmongCountries(player.citizenship(), jc.excludedCountries())) {
-        log.info("{} is citizen of excluded country {}",
+      if (!isAmongAllowedCountries(player, jc.includedCountries())) {
+        log.info("{} is not a citizen of allowed country {}",
+            player.nickname(), jc.includedCountries());
+        continue;
+      }
+      if (isAmongCountries(player, jc.excludedCountries())) {
+        log.info("{} is a citizen of excluded country {}",
             player.nickname(), jc.excludedCountries());
         continue;
       }
@@ -66,8 +71,12 @@ public class Runner extends Thread {
         .collect(joining(",", "[", "]"));
   }
 
-  private boolean isAmongCountries(Country country, Set<Country> excludedCountries) {
-    return excludedCountries.contains(country);
+  private boolean isAmongCountries(Player player, Set<Country> countries) {
+    return player.isCitizenOf(countries.stream().map(Country::getId).collect(Collectors.toSet()));
+  }
+
+  private boolean isAmongAllowedCountries(Player player, Set<Country> countries) {
+    return countries.isEmpty() || isAmongCountries(player, countries);
   }
 
   private void waitIfNotLastCitizenId(int currentCitizenId, int lastCitizenId) {

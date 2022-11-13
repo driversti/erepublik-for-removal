@@ -1,8 +1,12 @@
 package com.github.driversti.erepublik.friendsadd;
 
+import static com.github.driversti.erepublik.friendsadd.Country.ESTONIA;
 import static com.github.driversti.erepublik.friendsadd.Country.HUNGARY;
+import static com.github.driversti.erepublik.friendsadd.Country.LITHUANIA;
 import static com.github.driversti.erepublik.friendsadd.Country.RUSSIA;
 import static com.github.driversti.erepublik.friendsadd.Country.SERBIA;
+import static com.github.driversti.erepublik.friendsadd.Country.UKRAINE;
+import static com.github.driversti.erepublik.friendsadd.Country.USA;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -19,14 +23,15 @@ class RunnerTest {
 
   // WARNING! Long-running tests!
   @Test
-  void shouldSuccessfullyCallAddFriend() {
+  void shouldCallAddFriendWhenPlayerIsAmongIncludedCountries() {
     // given
     JobConfig jobConfig = new JobConfig.Builder("erpk", "token")
-        .fromId(178).toId(180).build();
+        .fromId(178).toId(180)
+        .includedCountries(Set.of(UKRAINE, LITHUANIA, ESTONIA)).build();
 
     // and
     Player player = new Player().isBanned(false).isDead(false).isBlocked(false)
-        .citizenship(Country.POLAND);
+        .citizenNickname("John Doe").citizenship(UKRAINE);
     when(apiClient.getCitizen(isA(GetCitizenRequestConfig.class))).thenReturn(player);
 
     // when
@@ -34,6 +39,26 @@ class RunnerTest {
 
     // then
     verify(apiClient, times(3)).addFriend(isA(AddFriendRequestConfig.class));
+  }
+
+  @Test
+  void shouldCallAddFriendWhenPlayerIsAmongAllowedCountries() {
+    // given
+    JobConfig jobConfig = new JobConfig.Builder("erpk", "token")
+        .fromId(178).toId(178)
+        .includedCountries(Set.of())
+        .excludedCountries(Set.of(RUSSIA, HUNGARY, SERBIA)).build();
+
+    // and
+    Player player = new Player().isBanned(false).isBlocked(false)
+        .isDead(false).citizenNickname("John Doe").citizenship(USA);
+    when(apiClient.getCitizen(isA(GetCitizenRequestConfig.class))).thenReturn(player);
+
+    // when
+    runner.run(jobConfig);
+
+    // then
+    verify(apiClient, times(1)).addFriend(isA(AddFriendRequestConfig.class));
   }
 
   @Test
@@ -61,7 +86,7 @@ class RunnerTest {
 
     // and
     Player player = new Player().isBanned(false).isDead(true).isBlocked(false)
-        .citizenNickname("John Doe").citizenship(Country.HUNGARY);
+        .citizenNickname("John Doe").citizenship(HUNGARY);
     when(apiClient.getCitizen(isA(GetCitizenRequestConfig.class))).thenReturn(player);
 
     // when
@@ -79,7 +104,7 @@ class RunnerTest {
 
     // and
     Player player = new Player().isBanned(false).isBlocked(true)
-        .isDead(false).citizenNickname("John Doe").citizenship(Country.HUNGARY);
+        .isDead(false).citizenNickname("John Doe").citizenship(HUNGARY);
     when(apiClient.getCitizen(isA(GetCitizenRequestConfig.class))).thenReturn(player);
 
     // when
@@ -97,7 +122,7 @@ class RunnerTest {
 
     // and
     Player player = new Player().isBanned(false).isBlocked(true)
-        .isDead(false).citizenNickname("John Doe").citizenship(Country.HUNGARY);
+        .isDead(false).citizenNickname("John Doe").citizenship(HUNGARY);
     when(apiClient.getCitizen(isA(GetCitizenRequestConfig.class))).thenReturn(player);
 
     // when
