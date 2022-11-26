@@ -41,3 +41,4 @@ build/
 ### Custom ###
 .idea
 /logs/
+/friends-add/logs/
