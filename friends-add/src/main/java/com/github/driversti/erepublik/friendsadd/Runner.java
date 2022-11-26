@@ -3,7 +3,6 @@ package com.github.driversti.erepublik.friendsadd;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 
-import com.github.driversti.erepublik.friendsadd.AddFriendRequestConfig.Builder;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,15 +29,14 @@ public class Runner extends Thread {
         continue;
       }
       if (!isAmongAllowedCountries(player, jc.includedCountries())) {
-        log.info("\"{}\" [{}] is not a citizen of allowed country {}. Skipping...",
-            player.nickname(), citizenId, jc.includedCountries());
+        log.info("\"{}\" [{}] is not a citizen [{}] of allowed countries {}. Skipping...",
+            player.nickname(), citizenId, player.citizenship(), jc.includedCountries());
         waitIfNotLastCitizenId(citizenId, jc.toId());
         continue;
       }
       if (isAmongCountries(player, jc.excludedCountries())) {
         log.info("\"{}\" [{}] is a citizen [{}] of excluded countries {}. Skipping...",
-            player.nickname(), citizenId, jc.excludedCountries(),
-            player.citizenship().readableName());
+            player.nickname(), citizenId, player.citizenship(), jc.excludedCountries());
         waitIfNotLastCitizenId(citizenId, jc.toId());
         continue;
       }

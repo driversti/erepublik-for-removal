@@ -1,7 +1,9 @@
 package com.github.driversti.erepublik.friendsadd;
 
+import static com.github.driversti.erepublik.friendsadd.Country.DENMARK;
 import static com.github.driversti.erepublik.friendsadd.Country.ESTONIA;
 import static com.github.driversti.erepublik.friendsadd.Country.HUNGARY;
+import static com.github.driversti.erepublik.friendsadd.Country.LATVIA;
 import static com.github.driversti.erepublik.friendsadd.Country.LITHUANIA;
 import static com.github.driversti.erepublik.friendsadd.Country.RUSSIA;
 import static com.github.driversti.erepublik.friendsadd.Country.SERBIA;
@@ -125,6 +127,40 @@ class RunnerTest {
     Player player = new Player().isBanned(false).isBlocked(true)
         .isDead(false).citizenNickname("John Doe").citizenship(HUNGARY);
     when(erepublikApiClient.getCitizen(isA(GetCitizenRequestConfig.class))).thenReturn(player);
+
+    // when
+    runner.run(jobConfig);
+
+    // then
+    verify(erepublikApiClient, times(0)).addFriend(isA(AddFriendRequestConfig.class));
+  }
+
+  @Test
+  void shouldNotCallAddFriendWhenPlayerIsNotAmongAllowedCountries() {
+    // given
+    JobConfig jobConfig = new JobConfig.Builder("erpk", "token")
+        .fromId(178).toId(178).includedCountries(Set.of(UKRAINE, LITHUANIA, LATVIA)).build();
+
+    // and
+    Player player = new Player().isBanned(false).isBlocked(false)
+        .isDead(false).citizenNickname("Your Father").citizenship(DENMARK);
+    when(erepublikApiClient.getCitizen(isA(GetCitizenRequestConfig.class))).thenReturn(player);
+
+    // when
+    runner.run(jobConfig);
+
+    // then
+    verify(erepublikApiClient, times(0)).addFriend(isA(AddFriendRequestConfig.class));
+  }
+
+  @Test
+  void shouldNotCallAddFriendWhenPlayerIsNotFound() {
+    // given
+    JobConfig jobConfig = new JobConfig.Builder("erpk", "token")
+        .fromId(178).toId(178).includedCountries(Set.of(UKRAINE, LITHUANIA, LATVIA)).build();
+
+    // and
+    when(erepublikApiClient.getCitizen(isA(GetCitizenRequestConfig.class))).thenReturn(null);
 
     // when
     runner.run(jobConfig);
