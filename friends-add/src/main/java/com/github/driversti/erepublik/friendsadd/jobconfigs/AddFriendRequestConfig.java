@@ -1,4 +1,4 @@
-package com.github.driversti.erepublik.friendsadd;
+package com.github.driversti.erepublik.friendsadd.jobconfigs;
 
 import java.util.Objects;
 import java.util.Set;
@@ -23,15 +23,15 @@ public class AddFriendRequestConfig {
     this.addDead = builder.addDead;
   }
 
-  String erpk() {
+  public String erpk() {
     return erpk;
   }
 
-  String token() {
+  public String token() {
     return token;
   }
 
-  int citizenId() {
+  public int citizenId() {
     return citizenId;
   }
 
@@ -94,7 +94,7 @@ public class AddFriendRequestConfig {
     private boolean addBlocked = false;
     private boolean addDead = false;
 
-    Builder(String erpk, String token, Integer citizenId) {
+    public Builder(String erpk, String token, Integer citizenId) {
       Objects.requireNonNull(erpk, "erpk cannot be null");
       Objects.requireNonNull(token, "token cannot be null");
       Objects.requireNonNull(citizenId, "citizenId cannot be null");

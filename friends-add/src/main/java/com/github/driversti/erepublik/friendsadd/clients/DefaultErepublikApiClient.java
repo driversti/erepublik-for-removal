@@ -1,4 +1,4 @@
-package com.github.driversti.erepublik.friendsadd;
+package com.github.driversti.erepublik.friendsadd.clients;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS;
@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.driversti.erepublik.friendsadd.exceptions.CSRFAttackDetectedException;
 import com.github.driversti.erepublik.friendsadd.exceptions.NotAuthorizedException;
+import com.github.driversti.erepublik.friendsadd.jobconfigs.AddFriendRequestConfig;
+import com.github.driversti.erepublik.friendsadd.jobconfigs.GetCitizenRequestConfig;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;

@@ -1,15 +1,16 @@
-package com.github.driversti.erepublik.friendsadd;
+package com.github.driversti.erepublik.friendsadd.clients;
 
+import com.github.driversti.erepublik.friendsadd.jobconfigs.Country;
 import java.util.Collection;
 
-class Player {
+public class Player {
 
   private Citizen citizen;
   private Location location;
   private Boolean isBanned;
   private Boolean isBlocked;
 
-  Player() {
+  public Player() {
     this.citizen = new Citizen();
     this.location = new Location();
   }
@@ -22,7 +23,7 @@ class Player {
     isBanned = banned;
   }
 
-  Player isBanned(Boolean banned) {
+  public Player isBanned(Boolean banned) {
     isBanned = banned;
     return this;
   }
@@ -31,7 +32,7 @@ class Player {
     return !citizen.is_alive;
   }
 
-  Player isDead(Boolean isDead) {
+  public Player isDead(Boolean isDead) {
     citizen.is_alive = !isDead;
     return this;
   }
@@ -40,11 +41,11 @@ class Player {
     this.citizen = citizen;
   }
 
-  String nickname() {
+  public String nickname() {
     return citizen.name;
   }
 
-  Player citizenNickname(String nickname) {
+  public Player citizenNickname(String nickname) {
     citizen.name = nickname;
     return this;
   }
@@ -53,11 +54,11 @@ class Player {
     this.location = location;
   }
 
-  boolean isBlocked() {
+  public boolean isBlocked() {
     return isBlocked;
   }
 
-  Player isBlocked(Boolean blocked) {
+  public Player isBlocked(Boolean blocked) {
     isBlocked = blocked;
     return this;
   }
@@ -66,11 +67,11 @@ class Player {
     isBlocked = blocked;
   }
 
-  Country citizenship() {
+  public Country citizenship() {
     return Country.getById(location.citizenshipCountry.id);
   }
 
-  Player citizenship(Country citizenship) {
+  public Player citizenship(Country citizenship) {
     location.citizenshipCountry.id = citizenship.getId();
     location.citizenshipCountry.name = citizenship.readableName();
     return this;
@@ -86,11 +87,11 @@ class Player {
         '}';
   }
 
-  boolean isCitizenOf(Collection<Integer> countryIds) {
+  public boolean isCitizenOf(Collection<Integer> countryIds) {
     return countryIds.contains(location.citizenshipCountry.id);
   }
 
-  Integer id() {
+  public Integer id() {
     return citizen.id;
   }
 

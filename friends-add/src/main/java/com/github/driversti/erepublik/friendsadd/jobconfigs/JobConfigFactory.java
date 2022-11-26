@@ -1,16 +1,18 @@
-package com.github.driversti.erepublik.friendsadd;
+package com.github.driversti.erepublik.friendsadd.jobconfigs;
 
-import static com.github.driversti.erepublik.friendsadd.ArgumentKey.ADD_BANNED;
-import static com.github.driversti.erepublik.friendsadd.ArgumentKey.ADD_BLOCKED;
-import static com.github.driversti.erepublik.friendsadd.ArgumentKey.ADD_DEAD;
-import static com.github.driversti.erepublik.friendsadd.ArgumentKey.ERPK;
-import static com.github.driversti.erepublik.friendsadd.ArgumentKey.EXCLUDE_COUNTRIES;
-import static com.github.driversti.erepublik.friendsadd.ArgumentKey.FROM_ID;
-import static com.github.driversti.erepublik.friendsadd.ArgumentKey.INCLUDE_COUNTRIES;
-import static com.github.driversti.erepublik.friendsadd.ArgumentKey.TOKEN;
-import static com.github.driversti.erepublik.friendsadd.ArgumentKey.TO_ID;
+import static com.github.driversti.erepublik.friendsadd.argsparser.ArgumentKey.ADD_BANNED;
+import static com.github.driversti.erepublik.friendsadd.argsparser.ArgumentKey.ADD_BLOCKED;
+import static com.github.driversti.erepublik.friendsadd.argsparser.ArgumentKey.ADD_DEAD;
+import static com.github.driversti.erepublik.friendsadd.argsparser.ArgumentKey.ERPK;
+import static com.github.driversti.erepublik.friendsadd.argsparser.ArgumentKey.EXCLUDE_COUNTRIES;
+import static com.github.driversti.erepublik.friendsadd.argsparser.ArgumentKey.FROM_ID;
+import static com.github.driversti.erepublik.friendsadd.argsparser.ArgumentKey.INCLUDE_COUNTRIES;
+import static com.github.driversti.erepublik.friendsadd.argsparser.ArgumentKey.TOKEN;
+import static com.github.driversti.erepublik.friendsadd.argsparser.ArgumentKey.TO_ID;
 
-import com.github.driversti.erepublik.friendsadd.JobConfig.Builder;
+import com.github.driversti.erepublik.friendsadd.argsparser.ArgumentKey;
+import com.github.driversti.erepublik.friendsadd.clients.EreptoolsApiClient;
+import com.github.driversti.erepublik.friendsadd.jobconfigs.JobConfig.Builder;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
@@ -29,7 +31,7 @@ public class JobConfigFactory {
     this.apiClient = apiClient;
   }
 
-  JobConfig create(Map<ArgumentKey, String> argumentMap) {
+  public JobConfig create(Map<ArgumentKey, String> argumentMap) {
     Builder builder = new Builder(argumentMap.get(ERPK), argumentMap.get(TOKEN));
     setFromId(argumentMap.get(FROM_ID), builder);
     setToId(argumentMap.get(TO_ID), builder);

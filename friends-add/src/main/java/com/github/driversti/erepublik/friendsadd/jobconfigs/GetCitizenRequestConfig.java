@@ -1,4 +1,4 @@
-package com.github.driversti.erepublik.friendsadd;
+package com.github.driversti.erepublik.friendsadd.jobconfigs;
 
 import java.util.Objects;
 

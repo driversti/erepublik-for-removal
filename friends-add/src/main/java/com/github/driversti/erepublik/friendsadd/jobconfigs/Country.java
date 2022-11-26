@@ -1,4 +1,4 @@
-package com.github.driversti.erepublik.friendsadd;
+package com.github.driversti.erepublik.friendsadd.jobconfigs;
 
 import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
@@ -97,11 +97,11 @@ public enum Country {
     this.emoji = emoji;
   }
 
-  String readableName() {
+  public String readableName() {
     return readableName;
   }
 
-  int getId() {
+  public int getId() {
     return id;
   }
 

@@ -1,19 +1,24 @@
 package com.github.driversti.erepublik.friendsadd;
 
-import static com.github.driversti.erepublik.friendsadd.Country.DENMARK;
-import static com.github.driversti.erepublik.friendsadd.Country.ESTONIA;
-import static com.github.driversti.erepublik.friendsadd.Country.HUNGARY;
-import static com.github.driversti.erepublik.friendsadd.Country.LATVIA;
-import static com.github.driversti.erepublik.friendsadd.Country.LITHUANIA;
-import static com.github.driversti.erepublik.friendsadd.Country.RUSSIA;
-import static com.github.driversti.erepublik.friendsadd.Country.SERBIA;
-import static com.github.driversti.erepublik.friendsadd.Country.UKRAINE;
-import static com.github.driversti.erepublik.friendsadd.Country.USA;
+import static com.github.driversti.erepublik.friendsadd.jobconfigs.Country.DENMARK;
+import static com.github.driversti.erepublik.friendsadd.jobconfigs.Country.ESTONIA;
+import static com.github.driversti.erepublik.friendsadd.jobconfigs.Country.HUNGARY;
+import static com.github.driversti.erepublik.friendsadd.jobconfigs.Country.LATVIA;
+import static com.github.driversti.erepublik.friendsadd.jobconfigs.Country.LITHUANIA;
+import static com.github.driversti.erepublik.friendsadd.jobconfigs.Country.RUSSIA;
+import static com.github.driversti.erepublik.friendsadd.jobconfigs.Country.SERBIA;
+import static com.github.driversti.erepublik.friendsadd.jobconfigs.Country.UKRAINE;
+import static com.github.driversti.erepublik.friendsadd.jobconfigs.Country.USA;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.github.driversti.erepublik.friendsadd.clients.ErepublikApiClient;
+import com.github.driversti.erepublik.friendsadd.clients.Player;
+import com.github.driversti.erepublik.friendsadd.jobconfigs.AddFriendRequestConfig;
+import com.github.driversti.erepublik.friendsadd.jobconfigs.GetCitizenRequestConfig;
+import com.github.driversti.erepublik.friendsadd.jobconfigs.JobConfig;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

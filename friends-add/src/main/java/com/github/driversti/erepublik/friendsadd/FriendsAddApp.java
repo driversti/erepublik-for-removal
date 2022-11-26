@@ -1,5 +1,13 @@
 package com.github.driversti.erepublik.friendsadd;
 
+import com.github.driversti.erepublik.friendsadd.argsparser.ArgumentKey;
+import com.github.driversti.erepublik.friendsadd.argsparser.ArgumentParser;
+import com.github.driversti.erepublik.friendsadd.clients.DefaultEreptoolsApiClient;
+import com.github.driversti.erepublik.friendsadd.clients.DefaultErepublikApiClient;
+import com.github.driversti.erepublik.friendsadd.clients.EreptoolsApiClient;
+import com.github.driversti.erepublik.friendsadd.clients.ErepublikApiClient;
+import com.github.driversti.erepublik.friendsadd.jobconfigs.JobConfig;
+import com.github.driversti.erepublik.friendsadd.jobconfigs.JobConfigFactory;
 import java.net.http.HttpClient;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;

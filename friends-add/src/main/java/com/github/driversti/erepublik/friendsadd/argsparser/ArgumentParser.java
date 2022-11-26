@@ -1,4 +1,4 @@
-package com.github.driversti.erepublik.friendsadd;
+package com.github.driversti.erepublik.friendsadd.argsparser;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -9,7 +9,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class ArgumentParser {
 
-  Map<ArgumentKey, String> parse(String[] args) {
+  public Map<ArgumentKey, String> parse(String[] args) {
     return Arrays.stream(args)
         .flatMap(splitBySpaceFunction())
         .map(createPairFunction())

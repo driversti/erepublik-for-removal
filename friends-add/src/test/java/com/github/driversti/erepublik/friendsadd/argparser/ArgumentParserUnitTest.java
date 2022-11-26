@@ -1,15 +1,17 @@
-package com.github.driversti.erepublik.friendsadd;
+package com.github.driversti.erepublik.friendsadd.argparser;
 
-import static com.github.driversti.erepublik.friendsadd.ArgumentKey.ADD_BLOCKED;
-import static com.github.driversti.erepublik.friendsadd.ArgumentKey.ERPK;
-import static com.github.driversti.erepublik.friendsadd.ArgumentKey.EXCLUDE_COUNTRIES;
-import static com.github.driversti.erepublik.friendsadd.ArgumentKey.FROM_ID;
-import static com.github.driversti.erepublik.friendsadd.ArgumentKey.INCLUDE_COUNTRIES;
-import static com.github.driversti.erepublik.friendsadd.ArgumentKey.TOKEN;
-import static com.github.driversti.erepublik.friendsadd.ArgumentKey.TO_ID;
+import static com.github.driversti.erepublik.friendsadd.argsparser.ArgumentKey.ADD_BLOCKED;
+import static com.github.driversti.erepublik.friendsadd.argsparser.ArgumentKey.ERPK;
+import static com.github.driversti.erepublik.friendsadd.argsparser.ArgumentKey.EXCLUDE_COUNTRIES;
+import static com.github.driversti.erepublik.friendsadd.argsparser.ArgumentKey.FROM_ID;
+import static com.github.driversti.erepublik.friendsadd.argsparser.ArgumentKey.INCLUDE_COUNTRIES;
+import static com.github.driversti.erepublik.friendsadd.argsparser.ArgumentKey.TOKEN;
+import static com.github.driversti.erepublik.friendsadd.argsparser.ArgumentKey.TO_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.github.driversti.erepublik.friendsadd.argsparser.ArgumentKey;
+import com.github.driversti.erepublik.friendsadd.argsparser.ArgumentParser;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 

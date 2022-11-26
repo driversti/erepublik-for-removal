@@ -3,6 +3,12 @@ package com.github.driversti.erepublik.friendsadd;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 
+import com.github.driversti.erepublik.friendsadd.clients.ErepublikApiClient;
+import com.github.driversti.erepublik.friendsadd.clients.Player;
+import com.github.driversti.erepublik.friendsadd.jobconfigs.AddFriendRequestConfig;
+import com.github.driversti.erepublik.friendsadd.jobconfigs.Country;
+import com.github.driversti.erepublik.friendsadd.jobconfigs.GetCitizenRequestConfig;
+import com.github.driversti.erepublik.friendsadd.jobconfigs.JobConfig;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package com.github.driversti.erepublik.friendsadd;
+package com.github.driversti.erepublik.friendsadd.jobconfigs;
 
 import static java.lang.String.format;
 
@@ -34,39 +34,39 @@ public class JobConfig {
     this.addBanned = builder.addBanned;
   }
 
-  String erpk() {
+  public String erpk() {
     return erpk;
   }
 
-  String token() {
+  public String token() {
     return token;
   }
 
-  int fromId() {
+  public int fromId() {
     return fromId;
   }
 
-  int toId() {
+  public int toId() {
     return toId;
   }
 
-  Set<Country> includedCountries() {
+  public Set<Country> includedCountries() {
     return includedCountries;
   }
 
-  Set<Country> excludedCountries() {
+  public Set<Country> excludedCountries() {
     return excludedCountries;
   }
 
-  boolean addBlocked() {
+  public boolean addBlocked() {
     return addBlocked;
   }
 
-  boolean addDead() {
+  public boolean addDead() {
     return addDead;
   }
 
-  boolean addBanned() {
+  public boolean addBanned() {
     return addBanned;
   }
 

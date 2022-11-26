@@ -1,7 +1,10 @@
-package com.github.driversti.erepublik.friendsadd;
+package com.github.driversti.erepublik.friendsadd.clients;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import com.github.driversti.erepublik.friendsadd.clients.DefaultErepublikApiClient;
+import com.github.driversti.erepublik.friendsadd.clients.ErepublikApiClient;
+import com.github.driversti.erepublik.friendsadd.jobconfigs.AddFriendRequestConfig;
 import java.net.http.HttpClient;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
