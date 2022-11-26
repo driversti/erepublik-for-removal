@@ -1,5 +1,6 @@
 package com.github.driversti.erepublik.friendsadd;
 
+import java.net.http.HttpClient;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,9 +12,11 @@ public class FriendsAddApp {
   public static void main(String[] args) {
     Map<ArgumentKey, String> argumentsMap = new ArgumentParser().parse(args);
 
-    JobConfig jobConfig = new JobConfigFactory().create(argumentsMap);
-    ApiClient apiClient = new DefaultApiClient();
+    HttpClient httpClient = HttpClient.newHttpClient();
+    EreptoolsApiClient ereptoolsApiClient = new DefaultEreptoolsApiClient(httpClient);
+    JobConfig jobConfig = new JobConfigFactory(ereptoolsApiClient).create(argumentsMap);
+    ErepublikApiClient erepublikApiClient = new DefaultErepublikApiClient(httpClient);
 
-    new Runner(apiClient).run(jobConfig);
+    new Runner(erepublikApiClient).run(jobConfig);
   }
 }

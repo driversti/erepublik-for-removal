@@ -15,6 +15,8 @@ import static com.github.driversti.erepublik.friendsadd.Country.RUSSIA;
 import static com.github.driversti.erepublik.friendsadd.Country.SERBIA;
 import static com.github.driversti.erepublik.friendsadd.Country.UKRAINE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.Map;
 import java.util.Set;
@@ -32,12 +34,16 @@ class JobConfigFactoryUnitTest {
   private final String addBlocked = "true";
   private final String addDead = "true";
 
-  private final JobConfigFactory factory = new JobConfigFactory();
+  private EreptoolsApiClient apiClient = mock(EreptoolsApiClient.class);
+  private final JobConfigFactory factory = new JobConfigFactory(apiClient);
 
   @Test
   void shouldCreateMinimallyValidJobConfig() {
     // given
     Map<ArgumentKey, String> args = Map.of(ERPK, erpk, TOKEN, token);
+
+    // and
+    when(apiClient.latestRegisteredPlayerId()).thenReturn(200);
 
     // when
     JobConfig actual = factory.create(args);

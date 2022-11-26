@@ -1,7 +1,6 @@
 package com.github.driversti.erepublik.friendsadd;
 
 import java.util.Collection;
-import java.util.Set;
 
 class Player {
 
@@ -9,6 +8,11 @@ class Player {
   private Location location;
   private Boolean isBanned;
   private Boolean isBlocked;
+
+  Player() {
+    this.citizen = new Citizen();
+    this.location = new Location();
+  }
 
   public boolean isBanned() {
     return isBanned;
@@ -24,12 +28,11 @@ class Player {
   }
 
   public boolean isDead() {
-    return citizen.is_alive;
+    return !citizen.is_alive;
   }
 
-  Player isDead(Boolean dead) {
-    createCitizenIfNeeded();
-    citizen.is_alive = dead;
+  Player isDead(Boolean isDead) {
+    citizen.is_alive = !isDead;
     return this;
   }
 
@@ -42,7 +45,6 @@ class Player {
   }
 
   Player citizenNickname(String nickname) {
-    createCitizenIfNeeded();
     citizen.name = nickname;
     return this;
   }
@@ -56,7 +58,6 @@ class Player {
   }
 
   Player isBlocked(Boolean blocked) {
-    createCitizenIfNeeded();
     isBlocked = blocked;
     return this;
   }
@@ -65,28 +66,14 @@ class Player {
     isBlocked = blocked;
   }
 
-  private void createCitizenIfNeeded() {
-    if (citizen == null) {
-      citizen = new Citizen();
-    }
-  }
-
   Country citizenship() {
     return Country.getById(location.citizenshipCountry.id);
   }
 
   Player citizenship(Country citizenship) {
-    createLocationIfNeeded();
     location.citizenshipCountry.id = citizenship.getId();
     location.citizenshipCountry.name = citizenship.readableName();
     return this;
-  }
-
-  private void createLocationIfNeeded() {
-    if (location == null) {
-      location = new Location();
-      location.citizenshipCountry = new Player.Location.CitizenshipCountry();
-    }
   }
 
   @Override
@@ -101,6 +88,10 @@ class Player {
 
   boolean isCitizenOf(Collection<Integer> countryIds) {
     return countryIds.contains(location.citizenshipCountry.id);
+  }
+
+  Integer id() {
+    return citizen.id;
   }
 
   private static class Citizen {
@@ -135,8 +126,11 @@ class Player {
 
     private CitizenshipCountry citizenshipCountry;
 
-    void setCitizenshipCountry(
-        CitizenshipCountry citizenshipCountry) {
+    Location() {
+      this.citizenshipCountry = new CitizenshipCountry();
+    }
+
+    void setCitizenshipCountry(CitizenshipCountry citizenshipCountry) {
       this.citizenshipCountry = citizenshipCountry;
     }
 

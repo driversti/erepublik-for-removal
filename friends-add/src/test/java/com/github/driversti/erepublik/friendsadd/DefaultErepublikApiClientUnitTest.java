@@ -2,12 +2,14 @@ package com.github.driversti.erepublik.friendsadd;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import java.net.http.HttpClient;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-class DefaultApiClientUnitTest {
+class DefaultErepublikApiClientUnitTest {
 
-  private final ApiClient apiClient = new DefaultApiClient();
+  private final HttpClient client = HttpClient.newHttpClient();
+  private final ErepublikApiClient erepublikApiClient = new DefaultErepublikApiClient(client);
 
   @Test
   @Disabled
@@ -17,6 +19,6 @@ class DefaultApiClientUnitTest {
         "5ea9e8274b3675524160101539d3b377", 9733213).build();
 
     // expect
-    assertDoesNotThrow(() -> apiClient.addFriend(config));
+    assertDoesNotThrow(() -> erepublikApiClient.addFriend(config));
   }
 }

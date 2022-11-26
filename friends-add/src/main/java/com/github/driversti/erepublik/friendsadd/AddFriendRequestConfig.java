@@ -94,7 +94,7 @@ public class AddFriendRequestConfig {
     private boolean addBlocked = false;
     private boolean addDead = false;
 
-    public Builder(String erpk, String token, Integer citizenId) {
+    Builder(String erpk, String token, Integer citizenId) {
       Objects.requireNonNull(erpk, "erpk cannot be null");
       Objects.requireNonNull(token, "token cannot be null");
       Objects.requireNonNull(citizenId, "citizenId cannot be null");

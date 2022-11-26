@@ -9,7 +9,8 @@ public enum ArgumentKey {
   INCLUDE_COUNTRIES("include_countries"),
   EXCLUDE_COUNTRIES("exclude_countries"),
   ADD_BLOCKED("add_blocked"),
-  ADD_DEAD("add_dead");
+  ADD_DEAD("add_dead"),
+  ADD_BANNED("add_banned");
 
   private final String value;
 
@@ -27,6 +28,7 @@ public enum ArgumentKey {
       case "exclude_countries" -> EXCLUDE_COUNTRIES;
       case "add_blocked" -> ADD_BLOCKED;
       case "add_dead" -> ADD_DEAD;
+      case "add_banned" -> ADD_BANNED;
       default -> throw new IllegalArgumentException("Not expected argument key: " + value);
     };
   }

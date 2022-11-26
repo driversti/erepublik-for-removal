@@ -1,5 +1,6 @@
 package com.github.driversti.erepublik.friendsadd;
 
+import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 
 import com.github.driversti.erepublik.friendsadd.AddFriendRequestConfig.Builder;
@@ -12,42 +13,55 @@ import org.apache.logging.log4j.Logger;
 public class Runner extends Thread {
 
   private static final Logger log = LogManager.getLogger(Runner.class);
-  private final ApiClient apiClient;
+  private final ErepublikApiClient erepublikApiClient;
 
-  public Runner(ApiClient apiClient) {
-    this.apiClient = apiClient;
+  public Runner(ErepublikApiClient erepublikApiClient) {
+    this.erepublikApiClient = erepublikApiClient;
   }
 
   void run(JobConfig jc) {
     logJobConfig(jc);
     for (int citizenId = jc.fromId(); citizenId <= jc.toId(); citizenId++) {
-      Player player = apiClient.getCitizen(
+      Player player = erepublikApiClient.getCitizen(
           new GetCitizenRequestConfig(jc.erpk(), jc.token(), citizenId));
-      if (player.isBanned()) {
-        log.info("Player {} with ID {} is banned. Skipping...", player.nickname(), citizenId);
+      if (player == null) {
+        log.info("Player with ID [{}] not found. Skipping...", citizenId);
+        waitIfNotLastCitizenId(citizenId, jc.toId());
         continue;
       }
       if (!isAmongAllowedCountries(player, jc.includedCountries())) {
-        log.info("{} is not a citizen of allowed country {}",
-            player.nickname(), jc.includedCountries());
+        log.info("\"{}\" [{}] is not a citizen of allowed country {}. Skipping...",
+            player.nickname(), citizenId, jc.includedCountries());
+        waitIfNotLastCitizenId(citizenId, jc.toId());
         continue;
       }
       if (isAmongCountries(player, jc.excludedCountries())) {
-        log.info("{} is a citizen of excluded country {}",
-            player.nickname(), jc.excludedCountries());
+        log.info("\"{}\" [{}] is a citizen [{}] of excluded countries {}. Skipping...",
+            player.nickname(), citizenId, jc.excludedCountries(),
+            player.citizenship().readableName());
+        waitIfNotLastCitizenId(citizenId, jc.toId());
         continue;
       }
-      if (player.isBlocked()) {
-        log.info("Player {} with ID {} is blocked. Skipping...", player.nickname(), citizenId);
+      if (isBlocked(jc, player)) {
+        log.info("\"{}\" [{}] is blocked. Skipping...", player.nickname(), citizenId);
+        waitIfNotLastCitizenId(citizenId, jc.toId());
         continue;
       }
-      if (player.isDead()) {
-        log.info("Player {} with ID {} is dead. Skipping...", player.nickname(), citizenId);
+      if (isBanned(jc, player)) {
+        log.info("\"{}\" [{}] is banned. Skipping...", player.nickname(), citizenId);
+        waitIfNotLastCitizenId(citizenId, jc.toId());
         continue;
       }
-      AddFriendRequestConfig addFriendRequestConfig = new Builder(jc.erpk(), jc.token(),
+      if (isDead(jc, player)) {
+        log.info("\"{}\" [{}] is dead. Skipping...", player.nickname(), citizenId);
+        waitIfNotLastCitizenId(citizenId, jc.toId());
+        continue;
+      }
+      AddFriendRequestConfig addFriendRequestConfig = new AddFriendRequestConfig
+          .Builder(jc.erpk(), jc.token(),
           citizenId).build();
-      apiClient.addFriend(addFriendRequestConfig);
+      erepublikApiClient.addFriend(addFriendRequestConfig);
+      addLogAfterSentRequest(jc, player);
       waitIfNotLastCitizenId(citizenId, jc.toId());
     }
   }
@@ -61,9 +75,10 @@ public class Runner extends Thread {
 
     log.info("Got job for adding citizens with IDs between {} and {}, "
             + "from countries {}, except countries {}, "
-            + "skipping blocked citizens: {}, skipping dead citizens: {}",
+            + "add blocked citizens: {}, add dead citizens: {}, "
+            + "add banned citizens: {}",
         jc.fromId(), jc.toId(), allowedCountries, forbiddenCountries, jc.addBlocked(),
-        jc.addDead());
+        jc.addDead(), jc.addBanned());
   }
 
   private String convertCountriesToString(Collection<Country> countries) {
@@ -84,10 +99,38 @@ public class Runner extends Thread {
       try {
         // allowed 3000 requests per 3600 seconds (1 request each 1200ms).
         // Since we perform 2 request for one citizen, we have to double the delay to avoid 429
-        Thread.sleep(2500L);
+        Thread.sleep(2200L);
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }
     }
+  }
+
+  private static void addLogAfterSentRequest(JobConfig jc, Player player) {
+    StringBuilder builder = new StringBuilder();
+    builder.append(format("Friendship request has been sent to \"%s\" [%s] %s",
+        player.nickname(), player.id(), player.citizenship().readableName()));
+    if (isDead(jc, player)) {
+      builder.append(", is dead");
+    }
+    if (isBlocked(jc, player)) {
+      builder.append(", is blocked by you");
+    }
+    if (isBanned(jc, player)) {
+      builder.append(", is banned");
+    }
+    log.info(builder.toString());
+  }
+
+  private static boolean isDead(JobConfig jc, Player player) {
+    return player.isDead() && !jc.addDead();
+  }
+
+  private static boolean isBanned(JobConfig jc, Player player) {
+    return player.isBanned() && !jc.addBanned();
+  }
+
+  private static boolean isBlocked(JobConfig jc, Player player) {
+    return player.isBlocked() && !jc.addBlocked();
   }
 }

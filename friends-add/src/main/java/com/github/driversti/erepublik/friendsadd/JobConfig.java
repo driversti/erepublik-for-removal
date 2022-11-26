@@ -1,5 +1,7 @@
 package com.github.driversti.erepublik.friendsadd;
 
+import static java.lang.String.format;
+
 import java.util.Objects;
 import java.util.Set;
 
@@ -14,12 +16,14 @@ public class JobConfig {
   private Set<Country> excludedCountries;
   private boolean addBlocked;
   private boolean addDead;
+  private boolean addBanned;
 
   private JobConfig(Builder builder) {
     this.erpk = builder.erpk;
     this.token = builder.token;
     if (builder.fromId > builder.toId) {
-      throw new IllegalArgumentException("'toId' cannot be bigger than 'fromId'");
+      throw new IllegalArgumentException(
+          format("'fromId' (%d) cannot be bigger than 'toId' (%d)", builder.fromId, builder.toId));
     }
     this.fromId = builder.fromId;
     this.toId = builder.toId;
@@ -27,6 +31,7 @@ public class JobConfig {
     this.excludedCountries = builder.excludedCountries;
     this.addBlocked = builder.addBlocked;
     this.addDead = builder.addDead;
+    this.addBanned = builder.addBanned;
   }
 
   String erpk() {
@@ -61,6 +66,10 @@ public class JobConfig {
     return addDead;
   }
 
+  boolean addBanned() {
+    return addBanned;
+  }
+
   @Override
   public int hashCode() {
     return Objects.hash(erpk, token, fromId, toId, includedCountries, excludedCountries,
@@ -76,10 +85,10 @@ public class JobConfig {
       return false;
     }
     return fromId == that.fromId && toId == that.toId && addBlocked == that.addBlocked
-        && addDead == that.addDead && erpk.equals(
-        that.erpk) && token.equals(that.token) && Objects.equals(includedCountries,
-        that.includedCountries) && Objects.equals(excludedCountries,
-        that.excludedCountries);
+        && addDead == that.addDead && addBanned == that.addBanned &&
+        erpk.equals(that.erpk) && token.equals(that.token) &&
+        Objects.equals(includedCountries, that.includedCountries) &&
+        Objects.equals(excludedCountries, that.excludedCountries);
   }
 
   @Override
@@ -93,6 +102,7 @@ public class JobConfig {
         ", excludedCountries=" + excludedCountries +
         ", addBlocked=" + addBlocked +
         ", addDead=" + addDead +
+        ", addBanned=" + addBanned +
         '}';
   }
 
@@ -107,6 +117,7 @@ public class JobConfig {
     private Set<Country> excludedCountries = Set.of();
     private boolean addBlocked;
     private boolean addDead;
+    private boolean addBanned;
 
     public Builder(String erpk, String token) {
       Objects.requireNonNull(erpk, "'erpk' cannot be null");
@@ -142,6 +153,11 @@ public class JobConfig {
 
     public Builder addDead(boolean addDead) {
       this.addDead = addDead;
+      return this;
+    }
+
+    public Builder addBanned(boolean addBanned) {
+      this.addBanned = addBanned;
       return this;
     }
 

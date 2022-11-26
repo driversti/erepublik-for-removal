@@ -1,5 +1,6 @@
 package com.github.driversti.erepublik.friendsadd;
 
+import static com.github.driversti.erepublik.friendsadd.ArgumentKey.ADD_BANNED;
 import static com.github.driversti.erepublik.friendsadd.ArgumentKey.ADD_BLOCKED;
 import static com.github.driversti.erepublik.friendsadd.ArgumentKey.ADD_DEAD;
 import static com.github.driversti.erepublik.friendsadd.ArgumentKey.ERPK;
@@ -15,8 +16,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class JobConfigFactory {
+
+  private static final Logger log = LogManager.getLogger(JobConfigFactory.class);
+
+  private final EreptoolsApiClient apiClient;
+
+  public JobConfigFactory(EreptoolsApiClient apiClient) {
+    this.apiClient = apiClient;
+  }
 
   JobConfig create(Map<ArgumentKey, String> argumentMap) {
     Builder builder = new Builder(argumentMap.get(ERPK), argumentMap.get(TOKEN));
@@ -28,6 +39,7 @@ public class JobConfigFactory {
     return builder
         .addBlocked(BooleanUtils.toBoolean(argumentMap.get(ADD_BLOCKED)))
         .addDead(BooleanUtils.toBoolean(argumentMap.get(ADD_DEAD)))
+        .addBanned(BooleanUtils.toBoolean(argumentMap.get(ADD_BANNED)))
         .build();
   }
 
@@ -40,9 +52,15 @@ public class JobConfigFactory {
 
   private void setToId(String toId, Builder builder) {
     if (toId == null) {
-      return;
+      toId = getLatestRegisteredPlayer();
     }
     builder.toId(Integer.parseInt(toId));
+  }
+
+  private String getLatestRegisteredPlayer() {
+    int latestRegisteredPlayerId = apiClient.latestRegisteredPlayerId();
+    log.info("The latest registered player has ID: {}", latestRegisteredPlayerId);
+    return String.valueOf(latestRegisteredPlayerId);
   }
 
   private void setIncludedCountries(String includedCountries, Builder builder) {

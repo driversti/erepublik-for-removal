@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration>
+<Configuration status="INFO">
+  <Properties>
+    <Property name="LOG_PATTERN">%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
+    <Property name="APP_LOG_PATH">./logs</Property>
+  </Properties>
+
   <Appenders>
     <Console name="Console">
-      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+      <PatternLayout pattern="${LOG_PATTERN}"/>
     </Console>
+    <RollingFile name="FileLog" fileName="${APP_LOG_PATH}/output.log"
+      filePattern="${APP_LOG_PATH}/%d{yyyy-MM-dd}-%i.log">
+      <PatternLayout pattern="${LOG_PATTERN}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="10MB"/>
+      </Policies>
+    </RollingFile>
   </Appenders>
+
   <Loggers>
-    <Root level="trace">
+    <Root level="info">
       <AppenderRef ref="Console"/>
+      <AppenderRef ref="FileLog"/>
     </Root>
   </Loggers>
 </Configuration>

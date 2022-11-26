@@ -1,6 +1,6 @@
 package com.github.driversti.erepublik.friendsadd;
 
-public interface ApiClient {
+public interface ErepublikApiClient {
 
   void addFriend(AddFriendRequestConfig addFriendRequestConfig);
 

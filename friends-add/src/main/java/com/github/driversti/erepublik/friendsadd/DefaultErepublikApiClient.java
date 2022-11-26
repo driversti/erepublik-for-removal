@@ -7,6 +7,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.github.driversti.erepublik.friendsadd.exceptions.CSRFAttackDetectedException;
+import com.github.driversti.erepublik.friendsadd.exceptions.NotAuthorizedException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -20,7 +22,6 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.ArrayUtils;
@@ -28,15 +29,19 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
-public class DefaultApiClient implements ApiClient {
+public class DefaultErepublikApiClient implements ErepublikApiClient {
 
   private static final ObjectMapper om = new ObjectMapper().registerModule(new JavaTimeModule())
       .disable(FAIL_ON_UNKNOWN_PROPERTIES)
       .disable(WRITE_DATES_AS_TIMESTAMPS);
   private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36";
   private final Logger log = LogManager.getLogger();
-  private final HttpClient client = buildHttpClient();
+  private final HttpClient client;
   private final String BASE_URL = "https://www.erepublik.com/en/main";
+
+  public DefaultErepublikApiClient(HttpClient client) {
+    this.client = client;
+  }
 
   @Override
   public void addFriend(AddFriendRequestConfig config) {
@@ -47,27 +52,32 @@ public class DefaultApiClient implements ApiClient {
         .headers(addFriendHeaders(config.erpk()))
         .POST(BodyPublishers.ofString(addFriendPayload(config.token(), config.citizenId())))
         .build();
-    log.info("Adding citizen with ID {}", config.citizenId());
+    log.debug("Adding citizen with ID {}", config.citizenId());
     Optional<HttpResponse<String>> responseOpt = makeRequest(request);
-    if (responseOpt.isEmpty()) {
+    if (responseOpt.isEmpty() || responseOpt.get().statusCode() == 404
+        || responseOpt.get().statusCode() == 500 || responseOpt.get().body().startsWith("<")) {
       log.warn("Cannot add a citizen with ID {} to your friend-list. Request failed",
           config.citizenId());
       return;
     }
     HttpResponse<String> httpResponse = responseOpt.get();
     AddFriendResponse addFriendResponse = toAddFriendResponse(httpResponse.body());
-    if (isError(addFriendResponse)) {
+    if (addFriendResponse.hasError()) {
       String possibleReason = Stream.of(addFriendResponse.message, addFriendResponse.error)
           .filter(Objects::nonNull).collect(Collectors.joining(","));
+      interruptIfNotAuthorized(possibleReason);
       log.warn("Request failed. Possible reason: {}", possibleReason);
     } else {
-      log.info(addFriendResponse.message);
+      log.debug("{} ID: {}", addFriendResponse.message, config.citizenId());
     }
   }
 
-  private static boolean isError(AddFriendResponse addFriendResponse) {
-    return Arrays.asList("true", "not_authorized").contains(addFriendResponse.error);
+  private void interruptIfNotAuthorized(String errorMessage) {
+    if ("not_authorized".equals(errorMessage)) {
+      throw new NotAuthorizedException();
+    }
   }
+
 
   @Nullable
   @Override
@@ -78,16 +88,13 @@ public class DefaultApiClient implements ApiClient {
         .headers(basicHeaders(config.erpk()))
         .GET().build();
 
-    log.info("Getting citizen's profile by ID {}", config.citizenId());
+    log.debug("Getting citizen's profile by ID {}", config.citizenId());
     Optional<HttpResponse<String>> responseOpt = makeRequest(request);
-    if (responseOpt.isEmpty() || responseOpt.get().statusCode() == 404) {
+    if (responseOpt.isEmpty() || responseOpt.get().statusCode() == 404
+        || responseOpt.get().statusCode() == 500) {
       return null;
     }
     return toPlayer(responseOpt.get().body());
-  }
-
-  private HttpClient buildHttpClient() {
-    return HttpClient.newBuilder().build();
   }
 
   private String[] addFriendHeaders(String erpk) {
@@ -125,11 +132,17 @@ public class DefaultApiClient implements ApiClient {
       log.error("IOException", e);
     } catch (InterruptedException e) {
       log.error("InterruptedException", e);
+    } catch (Exception e) {
+      log.error("Internal Server Error. ", e);
     }
     return Optional.empty();
   }
 
   private Player toPlayer(String body) {
+    if (body.contains("500 - Internal Server Error | eRepublik")) {
+      log.warn("500 - Internal Server Error | eRepublik");
+      return null;
+    }
     // TODO: consider passing as a dependency (it's expensive)
     return mapToObject(body, Player.class);
   }
@@ -160,5 +173,10 @@ public class DefaultApiClient implements ApiClient {
     void setError(String error) {
       this.error = error;
     }
+
+    boolean hasError() {
+      return Arrays.asList("true", "not_authorized").contains(error);
+    }
   }
+
 }
