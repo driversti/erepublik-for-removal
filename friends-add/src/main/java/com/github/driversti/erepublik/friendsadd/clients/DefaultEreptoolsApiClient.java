@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 public class DefaultEreptoolsApiClient implements EreptoolsApiClient {
 
   private static final int LATEST_KNOWN_PLAYER_ID = 9675728;
-  private static Logger log = LogManager.getLogger();
+  private static final Logger log = LogManager.getLogger(DefaultEreptoolsApiClient.class);
   private final HttpClient httpClient;
   private final ObjectMapper om;
 

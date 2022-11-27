@@ -20,11 +20,11 @@
     <maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
 
     <!--  DEPENDENCIES  VERSIONS  -->
-    <log4j2.version>2.19.0</log4j2.version>
+    <log4j.version>2.19.0</log4j.version>
     <apache-commons-lang3.version>3.12.0</apache-commons-lang3.version>
-    <jackson.version>2.13.4.2</jackson.version>
-    <jackson-datatype-jsr310.version>2.13.3</jackson-datatype-jsr310.version>
-    <jetbrains-annotations.version>17.0.0</jetbrains-annotations.version>
+    <jackson.version>2.14.0</jackson.version>
+    <jackson-datatype-jsr310.version>2.14.0</jackson-datatype-jsr310.version>
+    <jetbrains-annotations.version>23.0.0</jetbrains-annotations.version>
 
     <!--  TEST VERSIONS  -->
     <junit-jupiter.version>5.9.0</junit-jupiter.version>
@@ -40,12 +40,12 @@
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
-      <version>${log4j2.version}</version>
+      <version>${log4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
-      <version>${log4j2.version}</version>
+      <version>${log4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -120,6 +120,5 @@
       </plugin>
     </plugins>
   </build>
-
 
 </project>

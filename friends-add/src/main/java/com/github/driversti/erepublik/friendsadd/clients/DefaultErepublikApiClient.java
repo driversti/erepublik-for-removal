@@ -37,7 +37,7 @@ public class DefaultErepublikApiClient implements ErepublikApiClient {
       .disable(FAIL_ON_UNKNOWN_PROPERTIES)
       .disable(WRITE_DATES_AS_TIMESTAMPS);
   private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36";
-  private final Logger log = LogManager.getLogger();
+  private final Logger log = LogManager.getLogger(DefaultErepublikApiClient.class);
   private final HttpClient client;
   private final String BASE_URL = "https://www.erepublik.com/en/main";
 
