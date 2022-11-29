@@ -21,6 +21,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+// TODO: add tests
 public class JobConfigFactory {
 
   private static final Logger log = LogManager.getLogger(JobConfigFactory.class);
@@ -66,7 +67,7 @@ public class JobConfigFactory {
   }
 
   private void setIncludedCountries(String includedCountries, Builder builder) {
-    if (includedCountries == null) {
+    if (includedCountries == null || includedCountries.isEmpty()) {
       return;
     }
     Set<Country> countries = Arrays.stream(includedCountries.split(","))
@@ -76,7 +77,7 @@ public class JobConfigFactory {
   }
 
   private void setExcludedCountries(String excludedCountries, Builder builder) {
-    if (excludedCountries == null) {
+    if (excludedCountries == null || excludedCountries.isEmpty()) {
       return;
     }
     Set<Country> countries = Arrays.stream(excludedCountries.split(","))
