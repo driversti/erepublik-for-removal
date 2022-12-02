@@ -41,9 +41,19 @@ _NOTE. If you specify the same country for both lists, the INCLUDE_COUNTRIES wil
 
 ## Running
 
-### 
+### Docker
 
+Build first 
 
+```shell
+docker build -t erepublik-add-friends .
+```
+
+Then you are good to go
+
+```shell
+docker run --rm --name erepublik -ti -e ERPK=1ic65e1lpfj6o3957qv4q7t4r4 -e TOKEN=cefa20d8411ac75c349f1694031bbfe0 -e FROM_ID=11111 -e TO_ID=22222 -e ADD_DEAD=true -e ADD_BLOCKED=false -e ADD_BANNED=false -e EXCLUDED_COUNTRIES=41 -v $PWD/logs:/app/logs erepublik-add-friends
+```
 
 ## Drawbacks/TODOs
 
