@@ -29,6 +29,7 @@ public class Runner extends Thread {
     for (int citizenId = jc.fromId(); citizenId <= jc.toId(); citizenId++) {
       Player player = erepublikApiClient.getCitizen(
           new GetCitizenRequestConfig(jc.erpk(), jc.token(), citizenId));
+      // TODO: do not send request if the player is in friend-list already
       if (player == null) {
         log.info("Player with ID [{}] not found. Skipping...", citizenId);
         waitIfNotLastCitizenId(citizenId, jc.toId());
